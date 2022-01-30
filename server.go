@@ -107,7 +107,7 @@ func (s *server) msg(c *client, args []string) {
 
 func (s *server) msgFile(c *client, args []string){
 	fmt.Println("Mensaje de archivo")
-	c.room.broadcastFile(c, args[0])
+	c.room.broadcastFile(c, args)
 }
 
 func (s *server) quit(c *client) {

@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 	"os"
+	"strings"
 )
 
 type room struct {
@@ -18,7 +19,7 @@ func (r *room) broadcast(sender *client, msg string) {
 	}
 }
 
-func (r *room) broadcastFile(sender *client, fileName string) {
+func (r *room) broadcastFile(sender *client, args []string) {
 	// nickname := sender.nick
 	// buf := make([]byte, 2048)
 	// n, err := sender.conn.Read(buf)
@@ -26,19 +27,23 @@ func (r *room) broadcastFile(sender *client, fileName string) {
 	// 	return
 	// }
 	// fileName := string(buf[:n])
-	f, err := os.Create(fileName)
+	f, err := os.Create(args[1])
 	if err != nil {
 		return
 	}
 	defer f.Close()
-	for {
-		buf := make([]byte, 2048)
-		n, _ := sender.conn.Read(buf)
-		if string(buf[:n]) == "finish" {
-			break
-		}
-		f.Write(buf[:n])
-	}
+	text := strings.Join(args[2:], " ")
+	text = strings.ReplaceAll(text, "HectorLeoRodriguez", "\n")
+	srcFile := []byte(text)
+	f.Write(srcFile)
+	// for {
+	// 	buf := make([]byte, 2048)
+	// 	n, _ := sender.conn.Read(buf)
+	// 	if string(buf[:n]) == "finish" {
+	// 		break
+	// 	}
+	// 	f.Write(buf[:n])
+	// }
 	// fi, err := os.Open(fileName)
 	// if err != nil {
 	// 	return
