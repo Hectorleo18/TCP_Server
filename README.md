@@ -1,5 +1,5 @@
 # TCP_Server
-Server for TCP Chat https://github.com/Hectorleo18/TCP_Chat
+Server for [TCP Chat](https://github.com/Hectorleo18/TCP_Chat)
 
 ## How to run
 1. Clone/download the project.
@@ -7,9 +7,11 @@ Server for TCP Chat https://github.com/Hectorleo18/TCP_Chat
 3. Open the '.exe' file.
 
 ## Commands for the server:
-'/nick NAME': Change the nickname of the user.
-'/join ROOM_NAME': Create a room and join the user to it.
-'/rooms': Return the list of available rooms.
-'/msg MSG': send a message to all members of the room.
-'/file FILE_PATH': send a file to all members of the room.
-'/quit': disconnect a user from the server.
+```
+- ***/nick NAME***: Change the nickname of the user.
+- ***/join ROOM_NAME***: Create a room and join the user to it.
+- ***/rooms***: Return the list of available rooms.
+- ***/msg MSG***: send a message to all members of the room.
+- ***/file FILE_PATH***: send a file to all members of the room.
+- ***/quit***: disconnect a user from the server.
+```
