@@ -3,7 +3,7 @@ package main
 type commandID int
 
 const (
-	CMD_NICK commandID = iota
+	CMD_NICK commandID = iota //<----Autoincremental
 	CMD_JOIN
 	CMD_ROOMS
 	CMD_MSG
