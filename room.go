@@ -10,9 +10,7 @@ type room struct {
 	members map[net.Addr]*client
 }
 
-/*
-	Envía un mensaje de texto a todos los integrantes de una sala
-*/
+//broadcast send a text message to all the clients in the room
 func (r *room) broadcast(sender *client, msg string) {
 	for addr, m := range r.members {
 		if sender.conn.RemoteAddr() != addr {
@@ -21,9 +19,7 @@ func (r *room) broadcast(sender *client, msg string) {
 	}
 }
 
-/*
-	Envía un archivo a todos los integrantes de una sala
-*/
+//broadcastFile send a file to all the members of the room
 func (r *room) broadcastFile(sender *client, args []string) {
 	text := strings.Join(args[2:], " ")
 	for addr, m := range r.members {

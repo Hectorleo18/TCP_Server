@@ -12,9 +12,7 @@ type server struct {
 	commands chan command
 }
 
-/*
-	Crea un nuevo servidor
-*/
+//newServer creates a server struct
 func newServer() *server {
 	return &server{
 		rooms:    make(map[string]*room),
@@ -22,9 +20,7 @@ func newServer() *server {
 	}
 }
 
-/*
-	Asigna la función a cada comando
-*/
+//run assign every function to every command
 func (s *server) run() {
 	for cmd := range s.commands {
 		switch cmd.id {
@@ -44,9 +40,7 @@ func (s *server) run() {
 	}
 }
 
-/*
-	Crea un nuevo cliente en el servidor
-*/
+//newClient creates a new client struct in the server
 func (s *server) newClient(conn net.Conn) {
 	log.Printf("new client has joined: %s", conn.RemoteAddr().String())
 
@@ -59,12 +53,10 @@ func (s *server) newClient(conn net.Conn) {
 	c.readInput()
 }
 
-/*
-	Cambia el nickname de un usuario
-*/
+//nick change the nickname of the user
 func (s *server) nick(c *client, args []string) {
 	if len(args) < 2 {
-		c.msg("nick is required. usage: /nick NAME","server")
+		c.msg("nick is required. usage: /nick NAME", "server")
 		return
 	}
 
@@ -72,9 +64,7 @@ func (s *server) nick(c *client, args []string) {
 	c.msg(fmt.Sprintf("all right, I will call you %s", c.nick), "server")
 }
 
-/*
-	Agrega un cliente a una sala
-*/
+//join creates a room and add a client to it
 func (s *server) join(c *client, args []string) {
 	if len(args) < 2 {
 		c.msg("room name is required. usage: /join ROOM_NAME", "server")
@@ -82,7 +72,7 @@ func (s *server) join(c *client, args []string) {
 	}
 
 	roomName := args[1]
-	//Revisa si la sala ya existe
+	//Check if the room already exists
 	r, ok := s.rooms[roomName]
 	if !ok {
 		r = &room{
@@ -92,7 +82,7 @@ func (s *server) join(c *client, args []string) {
 		s.rooms[roomName] = r
 	}
 	r.members[c.conn.RemoteAddr()] = c
-	//Elimina al usuario de la sala anterior si es que existe
+	//Removes the user from the old room
 	s.quitCurrentRoom(c)
 	c.room = r
 
@@ -101,9 +91,7 @@ func (s *server) join(c *client, args []string) {
 	c.msg(fmt.Sprintf("welcome to %s", roomName), "server")
 }
 
-/*
-	Retorna todas las salas que han sido creadas
-*/
+//listRooms show all the rooms created
 func (s *server) listRooms(c *client) {
 	var rooms []string
 	for name := range s.rooms {
@@ -113,9 +101,7 @@ func (s *server) listRooms(c *client) {
 	c.msg(fmt.Sprintf("available rooms: %s", strings.Join(rooms, ", ")), "server")
 }
 
-/*
-	Envía un mensaje de texto a los miembros de una sala
-*/
+//msg send a text message to all the members of the room
 func (s *server) msg(c *client, args []string) {
 	if len(args) < 2 {
 		c.msg("message is required, usage: /msg MSG", "server")
@@ -126,10 +112,8 @@ func (s *server) msg(c *client, args []string) {
 	c.room.broadcast(c, msg)
 }
 
-/*
-	Envía un archivo a todos los miembros de una sala
-*/
-func (s *server) msgFile(c *client, args []string){
+//msgFile send a file to all the members of the room
+func (s *server) msgFile(c *client, args []string) {
 	if len(args) < 2 {
 		c.msg("file is required, usage: /file FILE_PATH", "server")
 		return
@@ -137,9 +121,7 @@ func (s *server) msgFile(c *client, args []string){
 	c.room.broadcastFile(c, args)
 }
 
-/*
-	Termina la conexión con el cliente
-*/
+//quit ends the conection with the client
 func (s *server) quit(c *client) {
 	log.Printf("client has left the chat: %s", c.conn.RemoteAddr().String())
 
@@ -149,9 +131,7 @@ func (s *server) quit(c *client) {
 	c.conn.Close()
 }
 
-/*
-	Elimina un usuario de una sala
-*/
+//quitCurrentRoom removes a client from the room
 func (s *server) quitCurrentRoom(c *client) {
 	if c.room != nil {
 		oldRoom := s.rooms[c.room.name]

@@ -6,10 +6,10 @@ import (
 )
 
 func main() {
-	//Crea un servidor
+	//Create a new server
 	s := newServer()
 	go s.run()
-	//Empieza a escuchar el puerto por el que recibirá información
+	//Start listen the port 8888
 	listener, err := net.Listen("tcp", ":8888")
 	if err != nil {
 		log.Fatalf("unable to start server: %s", err.Error())
@@ -17,7 +17,7 @@ func main() {
 
 	defer listener.Close()
 	log.Printf("server started on :8888")
-	//Acepta las conecciones de los clientes
+	//Accept the conections of the clients
 	for {
 		conn, err := listener.Accept()
 		if err != nil {

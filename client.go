@@ -15,19 +15,18 @@ type client struct {
 }
 
 func (c *client) readInput() {
-	//Loop infinito
 	for {
-		//Lee lo que esté en el canal hasta que encuentre un salto de línea
+		//Read the channel until find a line break
 		msg, err := bufio.NewReader(c.conn).ReadString('\n')
 		if err != nil {
 			return
 		}
-		//Se elimina el salto de línea
+		//Remove the line break
 		msg = strings.Trim(msg, "\r\n")
-		//Se separa la cadena por palabras
+		//Separate the string in []string
 		args := strings.Split(msg, " ")
 		cmd := strings.TrimSpace(args[0])
-		//Se comprueba qué comando fue el que se ingresó
+		//What command is?
 		switch cmd {
 		case "/nick":
 			c.commands <- command{
@@ -69,23 +68,17 @@ func (c *client) readInput() {
 	}
 }
 
-/*
-	Envía un mensaje notificando un error
-*/
+//err send a message with a error
 func (c *client) err(err error) {
 	c.conn.Write([]byte("err: " + err.Error() + "\n"))
 }
 
-/*
-	Envía un mensaje de texto
-*/
+//msg send a text message to the server
 func (c *client) msg(msg string, nick string) {
-	c.conn.Write([]byte("msg "+nick+" > " + msg + "\n"))
+	c.conn.Write([]byte("msg " + nick + " > " + msg + "\n"))
 }
 
-/*
-	Envía un archivo
-*/
+//file send a file to the server
 func (c *client) file(file string, nickname string, filename string) {
-	c.conn.Write([]byte("file "+nickname+" envió "+filename+" "+file+"\n"))
+	c.conn.Write([]byte("file " + nickname + " envió " + filename + " " + file + "\n"))
 }
